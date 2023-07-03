@@ -1,0 +1,33 @@
+version: '3'
+services:
+    db:
+        image: "postgres:11.7"
+        ports:
+            - "28044:5432"
+        environment:
+            - POSTGRES_USER=odoo
+            - POSTGRES_PASSWORD=odoo@odoosrv.invosa
+            - POSTGRES_DB=postgres
+        volumes:
+            - c12-db-data-tjforce:/var/lib/postgresql/data
+        container_name: postgresql-12-ee-tjfoce
+    odoo:
+        image: "invosasystems/odoo-invosa:12.0"
+        ports:
+            - "8083:8069"
+        volumes:
+            - c12-odoo-data-tjforce:/var/lib/odoo
+            - /home/docker/dev-TJFORCE/custom/:/mnt/ins-addons
+            - /home/docker/dev-TJFORCE/backups/:/mnt/odoo-backups
+            - /home/docker/dev-TJFORCE/logs/:/mnt/odoo-logs
+            - /home/docker/dev-TJFORCE/conf/odoo.conf:/etc/odoo/odoo.conf
+
+        container_name: odoo-12-ee-tjforce
+        restart: always
+        links:
+            - db:db
+
+volumes:
+    c12-db-data-tjforce:
+    c12-odoo-data-tjforce:
+
